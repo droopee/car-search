@@ -1,37 +1,43 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useCallback } from 'react';
 import '../../App.scss';
 import { checkAutoByNumber } from '../../api';
-import { Main } from '../../components/Main';
 import { Header } from '../../components/Header';
 import { initialState, reducer, ACTIONS } from './store';
+import { DEFAULT_HINT, LOADING_HINT } from '../../constants/locales';
+import { InfoTable } from "../../components/InfoTable";
 
-function App() {
+export const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const handleSetError = (error: string) => dispatch({ type: ACTIONS.SET_ERROR, error });
+  const handleSetError = useCallback((error: string) => (
+    dispatch({ type: ACTIONS.SET_ERROR, error })
+  ), [dispatch]);
 
-  const handleOnChange = async (number: string) => {
+  const handleOnSubmit = useCallback((number: string) => {
     dispatch({ type: ACTIONS.FETCHING });
 
-    try {
-      const data = await checkAutoByNumber(number);
-      dispatch({ type: ACTIONS.SET_DATA, data })
-    } catch ({ message }) {
-      handleSetError(message);
-    }
-  };
+    checkAutoByNumber(number)
+      .then(data => dispatch({ type: ACTIONS.SET_DATA, data }))
+      .catch(({ message }) => handleSetError(message))
+  }, [dispatch, handleSetError]);
 
   return (
     <div className="app">
       <Header
         error={state.error}
-        onChange={handleOnChange}
-        setError={handleSetError}
+        onSubmit={handleOnSubmit}
+        onError={handleSetError}
       />
 
-      <Main data={state.data} isLoading={state.isLoading}/>
+      <main className="main">
+        {
+          state.isLoading
+            ? <p className="hint">{LOADING_HINT}</p>
+            : state.data
+              ? <InfoTable data={state.data} />
+              : <p className="hint">{DEFAULT_HINT}</p>
+        }
+      </main>
     </div>
   );
-}
-
-export default App;
+};

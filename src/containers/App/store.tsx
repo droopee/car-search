@@ -1,3 +1,5 @@
+import { DataTableInterface } from '../../interfaces';
+
 export const ACTIONS = {
   FETCHING: 'fetching',
   SET_DATA: 'setData',
@@ -10,7 +12,7 @@ export const initialState = {
   error: '',
 };
 
-export function reducer(state: any, action: { type: string; data?: object|null; error?: string; }) {
+export function reducer(state: any, action: { type: string; data?: DataTableInterface; error?: string; }) {
   switch (action.type) {
     case ACTIONS.FETCHING:
       return { isLoading: true, data: null, error: '' };

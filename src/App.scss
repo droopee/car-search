@@ -7,6 +7,9 @@ $grey-color: #bababa;
   padding: 0;
   border: 0;
   vertical-align: baseline;
+}
+
+body {
   font-family: "Helvetica Neue", sans-serif;
 }
 
@@ -24,6 +27,7 @@ $grey-color: #bababa;
   &__search {
     width: 100%;
     padding: 10px;
+    font-family: inherit;
     font-size: 14px;
     outline: none;
     border: 3px solid $accent-color;
@@ -68,5 +72,11 @@ $grey-color: #bababa;
 
   &__column {
     padding: 5px;
+  }
+}
+
+@media screen and (max-width: 395px) {
+  .header {
+    height: 190px;
   }
 }
